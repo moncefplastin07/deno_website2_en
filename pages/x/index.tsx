@@ -15,15 +15,15 @@ import * as pageutils from "../../util/pagination_utils";
 import RegistryInstructions from "../../components/RegistryInstructions";
 import { CookieBanner } from "../../components/CookieBanner";
 import { replaceEmojis } from "../../util/emoji_util";
-import ModulesListOrderDropDown from '../../components/ModulesListOrderDropDown.tsx'
+import ModulesListOrderDropDown from "../../components/ModulesListOrderDropDown.tsx";
 
 const PER_PAGE = 20;
 
 function ThirdPartyRegistryList(): React.ReactElement {
   const { asPath, query: routerQuery, replace } = useRouter();
   const [overlayOpen, setOverlayOpen] = React.useState(asPath.endsWith("#add"));
-  const [orderBy,setOrderBy] = React.useState({op: '', isDescOrder: false});
-  const [resp, setResp] = React.useState()
+  const [orderBy, setOrderBy] = React.useState({ op: "", isDescOrder: false });
+  const [resp, setResp] = React.useState();
 
   const page = parseInt(
     (Array.isArray(routerQuery.page)
@@ -45,14 +45,17 @@ function ThirdPartyRegistryList(): React.ReactElement {
     });
   }
 
-  const reorderThirdPartyRegistryList =(e)=>{
-    
-    const sortBy = e.target.value    
-    const reSortedList = resp.results.sort((m1, m2)=> (m1[sortBy] || 0) - (m2[sortBy] || 0))
-    setOrderBy({op: sortBy, isDescOrder:!orderBy.isDescOrder})
-    setResp({totalCount: resp.totalCount, results: orderBy.isDescOrder ? reSortedList : reSortedList.reverse()})
-
-  }
+  const reorderThirdPartyRegistryList = (e) => {
+    const sortBy = e.target.value;
+    const reSortedList = resp.results.sort(
+      (m1, m2) => (m1[sortBy] || 0) - (m2[sortBy] || 0)
+    );
+    setOrderBy({ op: sortBy, isDescOrder: !orderBy.isDescOrder });
+    setResp({
+      totalCount: resp.totalCount,
+      results: orderBy.isDescOrder ? reSortedList : reSortedList.reverse(),
+    });
+  };
 
   function setPage(page: number) {
     const query = page !== 1 ? { page: page.toFixed(0) } : undefined;
@@ -77,7 +80,7 @@ function ThirdPartyRegistryList(): React.ReactElement {
     { dedupingInterval: 300, refreshInterval: 0, initialData: undefined }
   );
   const { data: stats } = useSWR("dummy", () => getStats());
-  setResp(response)
+  setResp(response);
   return (
     <>
       <Head>
@@ -145,7 +148,14 @@ function ThirdPartyRegistryList(): React.ReactElement {
               value={query}
               onChange={handleSearchInput}
             />
-            {query ? <ModulesListOrderDropDown selected={orderBy.op} onChange={reorderThirdPartyRegistryList}/> : ''}
+            {query ? (
+              <ModulesListOrderDropDown
+                selected={orderBy.op}
+                onChange={reorderThirdPartyRegistryList}
+              />
+            ) : (
+              ""
+            )}
           </div>
           <div className="sm:max-w-screen-lg sm:mx-auto sm:px-6 md:px-8 pb-4 sm:pb-12">
             {resp === undefined ? (
